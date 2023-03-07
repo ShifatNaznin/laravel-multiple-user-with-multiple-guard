@@ -6,7 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
     {
         protected $guard = 'affiliate';
        protected $fillable = [
-            'name', 'email', 'password',
+            'name', 'email', 'password','userType','promoCode','parentId'
         ];
         protected $hidden = [
             'password', 'remember_token',

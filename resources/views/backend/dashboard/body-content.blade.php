@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('backend.admin')
 @section('content')
 {{URL::to('/')}}
     {{-- @php

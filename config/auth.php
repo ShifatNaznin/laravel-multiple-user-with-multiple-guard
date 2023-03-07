@@ -84,7 +84,7 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        'affiliate' => [
+        'affiliates' => [
             'driver' => 'eloquent',
             'model' => App\Models\Affiliate::class,
         ],

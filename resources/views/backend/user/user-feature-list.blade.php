@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('backend.admin')
 @section('content')
     @include('flash::message')
     <div class="content-header row align-items-center m-0">

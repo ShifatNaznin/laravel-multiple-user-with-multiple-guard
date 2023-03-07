@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AffiliateController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\FleetAssetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FleetDataController;
@@ -24,27 +27,34 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     auth()->logout();
-    return view('auth.login');
+    return view('frontend.account-type');
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-// user
-Route::post('/custom-login', [UserController::class, 'customLogin'])->name('customLogin'); 
-Route::get('get-user', [UserController::class, 'userList'])->name('userList');
-Route::get('change-user-status', [UserController::class, 'changeUserStatus'])->name('changeUserStatus');
-Route::get('/edit-user/{id}', [UserController::class, 'editUser'])->name('editUser');
-Route::post('/update-user', [UserController::class, 'updateUser'])->name('updateUser');
-Route::post('/post-email', [UserController::class, 'postEmail'])->name('postEmail');
-Route::get('/delete-user/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
-Route::get('user-feature-list', [UserController::class, 'userFeatureList'])->name('userFeatureList');
-Route::get('/add-user-feature/{id}', [UserController::class, 'addUserFeature'])->name('addUserFeature');
-Route::post('/store-user-feature', [UserController::class, 'storeUserFeature'])->name('storeUserFeature');
-
-// user role
-Route::get('/user-role-list', [UserRoleController::class, 'userRoleList'])->name('userRoleList');
-Route::post('/store-user-role', [UserRoleController::class, 'storeUserRole'])->name('storeUserRole');
-Route::post('/update-user-role', [UserRoleController::class, 'updateUserRole'])->name('updateUserRole');
-Route::get('/delete-user-role/{id}', [UserRoleController::class, 'deleteUserRole'])->name('deleteUserRole');
+//Admin
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/login', [AdminController::class, 'login'])->name('admin.login'); 
+    Route::get('/register', [AdminController::class, 'register'])->name('admin.register'); 
+    Route::post('/signup', [AdminController::class, 'signup'])->name('admin.signup'); 
+    Route::post('/adminlogin', [AdminController::class, 'adminlogin'])->name('admin.adminlogin'); 
+});
+//Affiliate
+Route::group(['prefix' => 'affiliate'], function () {
+    Route::get('/login', [AffiliateController::class, 'login'])->name('affiliate.login'); 
+    Route::get('/register', [AffiliateController::class, 'register'])->name('affiliate.register'); 
+    Route::get('/sub-affiliate-register', [AffiliateController::class, 'subAffiliateRegister'])->name('affiliate.subAffiliateRegister'); 
+    Route::post('/signup', [AffiliateController::class, 'signup'])->name('affiliate.signup'); 
+    Route::post('/affiliatelogin', [AffiliateController::class, 'affiliatelogin'])->name('affiliate.affiliatelogin'); 
+});
+//User
+Route::group(['prefix' => 'user'], function () {
+    Route::get('/login', [UserController::class, 'login'])->name('user.login'); 
+    Route::get('/register', [UserController::class, 'register'])->name('user.register'); 
+    Route::post('/signup', [UserController::class, 'signup'])->name('user.signup'); 
+    Route::post('/userlogin', [UserController::class, 'userlogin'])->name('user.userlogin'); 
+    Route::get('/information/{id}', [UserController::class, 'information'])->name('user.information'); 
+    Route::get('/add-money/{id}', [UserController::class, 'addMoney'])->name('user.addMoney'); 
+    Route::post('/store-money', [UserController::class, 'storeMoney'])->name('user.storeMoney'); 
+});

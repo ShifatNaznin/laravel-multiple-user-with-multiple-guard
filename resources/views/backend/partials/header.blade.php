@@ -101,16 +101,16 @@
                     <div class="dropdown-header d-sm-none">
                         <a class="header-arrow"><i class="icon ion-md-arrow-back"></i></a>
                     </div>
-                    <div class="user-header">
+                    {{-- <div class="user-header">
                         <div class="img-user">
                             <img src="{{ asset('admin') }}/assets/dist/img/avatar-1.jpg" alt="">
                         </div><!-- img-user -->
                         <h6>{{Auth::user()->name}}</h6>
                         <span><a href="cdn-cgi/l/email-protection" class="__cf_email__"
                                 data-cfemail="2f4a574e425f434a6f48424e4643014c4042">{{Auth::user()->email}}</a></span>
-                    </div><!-- user-header -->
+                    </div>
                     <a href="{{route('editUser',Auth::user()->id)}}" class="dropdown-item"><i class="typcn typcn-cog-outline"></i> Account
-                        Settings</a>
+                        Settings</a> --}}
                     <a href="http://bhulua.thememinister.com/page-signin.html" class="dropdown-item"
                         href="{{ route('logout') }}" onclick="event.preventDefault();
                                   document.getElementById('logout-form').submit();"><i

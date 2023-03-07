@@ -2,181 +2,129 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Feature;
+use App\Models\Affiliate;
+use App\Models\Commission;
 use App\Models\User;
-use App\Models\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Hash;
-use Illuminate\Support\Str;
-use DB;
-use Carbon\Carbon;
-use Mail;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function customLogin(Request $request)
+    public function login()
     {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-        $user = User::where('email', $request->email)->where('status', 'Active')->first();
-        if ($user) {
-            $credentials = $request->only('email', 'password');
-            if (Auth::attempt($credentials)) {
-                // return "ok";
-                return redirect()->intended('home');
-            }else {
-                return redirect("login")->with('error', 'These credentials do not match our records.');
-            }
-        } else {
-            return redirect("login")->with('error', 'These credentials do not match our records.');
-        }
+        return view('frontend.user.login');
     }
-    public function userList()
+    public function register()
     {
-        $data = User::orderBy('id','DESC')->get();
-        return view('admin.user.index')->with([
-            'data' => $data,
-        ]);
+        return view('frontend.user.register');
     }
-
-    public function editUser($id)
+    public function signup(Request $request)
     {
-        $data = User::findOrFail($id);
-        return view('admin.user.edit')->with([
-            'data' => $data,
-        ]);
-    }
-    public function changeUserStatus(Request $request)
-    {
-        $id = $request->id;
-        $getStatus = DB::table('users')->where('id', $id)->first();
-
-        if ($getStatus->status == 'Active') {
-            $change = DB::table('users')->where('id', $id)->update(array(
-                'status' => 'Deactive'
-            ));
-
-            return true;
-        }
-        if ($getStatus->status == 'Deactive') {
-            $change = DB::table('users')->where('id', $id)->update(array(
-                'status' => 'Active'
-            ));
-
-            return true;
-        }
-    }
-    public function updateUser(Request $request)
-    {
-        if (!empty($request->oldPassword && $request->newPassword)) {
-            $hashedPassword = Auth::user()->password;
-
-            if (\Hash::check($request->oldPassword, $hashedPassword)) {
-
-                if (!\Hash::check($request->newPassword, $hashedPassword)) {
-                    $add = User::find($request->id);
-                    $add->name = $request->name;
-                    $add->email = $request->email;
-                    if ($request->newPassword == null) {
-                        $add->password =  $add->password;
-                    } else {
-                        $add->password =  Hash::make($request->newPassword);
-                    }
-                    if ($add->save()) {
-                        flash('Successfully Updated')->success();
-                        return back();
-                    } else {
-                        flash('Error')->error();
-                        return back();
-                    }
-                } else {
-                    flash('new password can not be the old password!')->error();
-                    return redirect()->back();
-                }
-            } else {
-                flash('old password doesnt matched ')->error();
-                return redirect()->back();
-            }
-        } else {
-            $add = User::find($request->id);
-            $add->name = $request->name;
-            $add->email = $request->email;
-            if ($request->newPassword == null) {
-                $add->password =  $add->password;
-            } else {
-                $add->password =  Hash::make($request->newPassword);
-            }
-            if ($add) {
-                flash('Successfully Updated')->success();
-                return back();
-            } else {
-                flash('Error')->error();
-                return back();
-            }
-        }
-    }
-    public function postEmail(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:users',
-        ]);
-
-        $token = Str::random(60);
-
-        DB::table('password_resets')->insert(
-            ['email' => $request->email, 'token' => $token, 'created_at' => Carbon::now()]
-        );
-
-        Mail::send('auth.password.verify', ['token' => $token], function ($message) use ($request) {
-            $message->from($request->email);
-            $message->to('codingdriver15@gmail.com');
-            $message->subject('Reset Password Notification');
-        });
-
-        return back()->with('message', 'We have e-mailed your password reset link!');
-    }
-    public function deleteUser($id)
-    {
-        User::find($id)->delete();
-        flash('Successfully Deleted')->success();
-        return back();
-    }
-    public function userFeatureList()
-    {
-        $data = UserRole::orderBy('id', 'DESC')->get();
-        $feature = Feature::orderBy('id', 'DESC')->get();
-        return view('admin.user.user-feature-list')->with([
-            'data' => $data,
-            'feature' => $feature,
-        ]);
-    }
-    public function addUserFeature($id)
-    {
-        $data = UserRole::where('id', $id)->first();
-        $feature = Feature::orderBy('id', 'DESC')->get();
-        return view('admin.user.user-feature')->with([
-            'data' => $data,
-            'feature' => $feature,
-        ]);
-    }
-    public function storeUserFeature(Request $request)
-    {
-        // return
-        if (isset($request->userFeature)) {
-            $userFeature = implode(",", $request->userFeature);
-        }else{
-            $userFeature =0;
-        }
-        $data = DB::table('user_roles')
-            ->where('id',$request->id)
-            ->update(['userFeature' => $userFeature]);
-        if ($data) {
+        try {
+            $randomNumber = mt_rand(100, 9999);
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'userType' => $request->userType,
+                'dob' => $request->dob,
+                'registrationCode' => $request->registrationCode,
+                'password' => Hash::make($request->password),
+            ]);
             flash('Successfully Added')->success();
             return back();
-        } else {
+        } catch (\Throwable $th) {
+            flash('Error')->error();
+            return back();
+        }
+    }
+    public function userlogin(Request $request)
+    {
+        $this->validate($request, [
+            'email'   => 'required|email',
+            'password' => 'required|min:6'
+        ]);
+        if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+            return redirect()->intended('home');
+        }
+        return back()->withInput($request->only('email', 'remember'));
+    }
+    public function information($id)
+    {
+        $data = User::findOrFail($id);
+        return view('backend.user.info')->with([
+            'data' => $data
+        ]);
+    }
+    public function addMoney($id)
+    {
+        $data = User::findOrFail($id);
+        return view('backend.user.add-money')->with([
+            'data' => $data
+        ]);
+    }
+    public function storeMoney(Request $request)
+    {
+        $commissionAmount = 0;
+        $afterCommisionAmount = 0;
+        $user = User::where('id', $request->id)->first();
+        if (isset($user->registrationCode)) {
+            $getAffiliate = Affiliate::where('promoCode', $user->registrationCode)->first();
+            if ($getAffiliate->userType == 'affiliate') {
+                $percent = (30 / 100);
+                $totalAmount = ($request->amount * $percent);
+                $afterCommisionAmount = ($request->amount -  $totalAmount);
+                $commissionAmount = $totalAmount;
+                if (isset($totalAmount)) {
+                    Commission::create([
+                        'userId' => $request->id,
+                        'userAmmount' => $request->amount,
+                        'affiliateId' =>  $getAffiliate->id,
+                        'affiliateType' => $getAffiliate->userType,
+                        'commissionPercent' => '30%',
+                        'commissionAmount' => $totalAmount,
+                    ]);
+                }
+            } elseif ($getAffiliate->userType == 'subaffiliate') {
+                $getParentAffiliateType = Affiliate::where('id', $getAffiliate->parentId)->first();
+                $subAffPercent = (20 / 100);
+                $totalSubAffAmount = ($request->amount * $subAffPercent);
+                if (isset($totalSubAffAmount)) {
+                    Commission::create([
+                        'userId' => $request->id,
+                        'userAmmount' => $request->amount,
+                        'affiliateId' =>  $getAffiliate->parentId,
+                        'affiliateType' => $getParentAffiliateType->userType,
+                        'commissionPercent' => '20%',
+                        'commissionAmount' => $totalSubAffAmount,
+                    ]);
+                }
+                $AffPercent = (10 / 100);
+                $totalAffAmount = ($request->amount * $AffPercent);
+                if (isset($totalAffAmount)) {
+                    Commission::create([
+                        'userId' => $request->id,
+                        'userAmmount' => $request->amount,
+                        'affiliateId' =>  $getAffiliate->id,
+                        'affiliateType' => $getAffiliate->userType,
+                        'commissionPercent' => '10%',
+                        'commissionAmount' => $totalAffAmount,
+                    ]);
+                }
+                $commissionAmount = ($totalSubAffAmount + $totalAffAmount);
+                $afterCommisionAmount = ($request->amount - $commissionAmount);
+            }
+        }
+        try {
+            User::where('id', $request->id)->update([
+                'amount' => $request->amount,
+                'commissionAmount' => $commissionAmount,
+                'amountAfterCommission' => $afterCommisionAmount,
+                'details' => $request->details,
+            ]);
+            flash('Successfully Added')->success();
+            return back();
+        } catch (\Throwable $th) {
             flash('Error')->error();
             return back();
         }

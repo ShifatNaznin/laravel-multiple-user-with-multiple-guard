@@ -15,7 +15,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
+        // $this->middleware('guest:admin');
     }
 
     /**
@@ -28,7 +29,7 @@ class HomeController extends Controller
         // $data=FleetData::get();
         // $assetTotal=FleetData::count();
 
-        return view('admin.dashboard.body-content')->with([
+        return view('backend.dashboard.body-content')->with([
             // 'assetTotal'=>$assetTotal,
             // 'data'=>$data,
         ]);

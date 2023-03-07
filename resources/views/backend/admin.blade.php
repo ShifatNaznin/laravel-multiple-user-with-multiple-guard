@@ -46,11 +46,11 @@
     <!-- #END# Page Loader -->
     <div class="wrapper">
         <!-- Sidebar  -->
-        @include('admin.partials.sidebar')
+        @include('backend.partials.sidebar')
         <!-- Page Content  -->
         <div class="content-wrapper">
             <div class="main-content">
-                @include('admin.partials.header')
+                @include('backend.partials.header')
                 @yield('content')
             </div>
             <!--/.main content-->

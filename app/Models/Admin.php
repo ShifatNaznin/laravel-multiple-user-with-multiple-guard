@@ -6,7 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
     { 
         protected $guard = 'admin';
         protected $fillable = [
-            'name', 'email', 'password',
+            'name', 'email', 'password','userType',
         ];
         protected $hidden = [
             'password', 'remember_token',

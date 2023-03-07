@@ -8163,3 +8163,6 @@ div.dataTables_wrapper div.dataTables_processing {
   .slider.round:before {
     border-radius: 50%;
   }
+  .nav-link-home{
+        border: 1px solid !important;
+  }
