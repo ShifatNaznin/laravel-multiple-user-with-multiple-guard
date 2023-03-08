@@ -24,12 +24,17 @@ class AffiliateController extends Controller
     public function signup(Request $request)
     {
         $affUser = Auth::guard('affiliate')->user();
+        if (isset($affUser)) {
+            $pId=$affUser->id;
+        }else{
+            $pId=0;
+        }
         try {
             $randomNumber = mt_rand(100, 9999);
             Affiliate::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'parentId' => $affUser->id,
+                'parentId' => $pId,
                 'userType' => $request->userType,
                 'promoCode' => $request->userType.'-'. $randomNumber,
                 'password' => Hash::make($request->password),
@@ -52,5 +57,15 @@ class AffiliateController extends Controller
             return redirect()->intended('home');
         }
         return back()->withInput($request->only('email', 'remember'));
+    }
+    public function transection(){
+        $id= Auth::guard('affiliate')->user()->id;
+        // return $id;
+        $user=Affiliate::where('id',$id)->first();
+        $data=UserTransection::where('userId',$id)->orderBy('id','DESC')->get();
+        return view('backend.affiliate.transection')->with([
+            'user'=>$user,
+            'data' => $data
+        ]);
     }
 }

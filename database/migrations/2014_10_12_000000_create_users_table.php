@@ -21,10 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('userType');
             $table->timestamp('dob')->nullable();
             $table->string('registrationCode')->nullable();
-            $table->integer('amount')->nullable();
-            $table->integer('commissionAmount')->nullable();
-            $table->integer('amountAfterCommission')->nullable();
-            $table->text('details')->nullable();
+            $table->integer('currentAmount')->default(0);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

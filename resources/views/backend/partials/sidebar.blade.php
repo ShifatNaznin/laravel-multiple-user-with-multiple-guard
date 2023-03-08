@@ -54,6 +54,9 @@
                                     class="typcn typcn-home-outline mr-2"></i>Add Sub Affiliate User</a>
                         </li>
                     @endif
+                    <li class="{{ Route::is('affiliate.transection') ? 'mm-active' : '' }}">
+                        <a href="{{ route('affiliate.transection') }}"><i class="typcn typcn-user-outline mr-2"></i>Affiliate Transection</a>
+                    </li>
                 @endif
                 @if (Auth::guard('web')->check())
                 <li class="{{ Route::is('user.information') ? 'mm-active' : '' }}">
@@ -61,6 +64,9 @@
                 </li>
                 <li class="{{ Route::is('user.addMoney') ? 'mm-active' : '' }}">
                     <a href="{{ route('user.addMoney',$userdata->id) }}"><i class="typcn typcn-user-outline mr-2"></i>Add Money</a>
+                </li>
+                <li class="{{ Route::is('user.transection') ? 'mm-active' : '' }}">
+                    <a href="{{ route('user.transection') }}"><i class="typcn typcn-user-outline mr-2"></i>User Transection</a>
                 </li>
             @endif
             </ul>

@@ -52,17 +52,10 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <div><strong>Amount</strong></div>
+                                            <div><strong>Current Amount</strong></div>
                                         </td>
                                         <td>:</td>
-                                        <td>{{$data->amount}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div><strong>Details</strong></div>
-                                        </td>
-                                        <td>:</td>
-                                        <td>{{$data->details}}</td>
+                                        <td>{{$data->currentAmount}}</td>
                                     </tr>
                                    
                                 </tbody>

@@ -9,22 +9,32 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function login(){
+    public function login()
+    {
         return view('frontend.admin.login');
     }
-    public function register(){
+    public function register()
+    {
         return view('frontend.admin.register');
     }
-    public function signup(Request $request){
-        Admin::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'userType' => $request->userType,
-            'password' => Hash::make($request->password),
-        ]);
-        return redirect()->intended('admin/login');
+    public function signup(Request $request)
+    {
+        try {
+            Admin::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'userType' => $request->userType,
+                'password' => Hash::make($request->password),
+            ]);
+            flash('Successfully Registered')->success();
+            return redirect()->intended('admin/login');
+        } catch (\Throwable $th) {
+            flash('Error')->error();
+            return back();
+        }
     }
-    public function adminlogin(Request $request){
+    public function adminlogin(Request $request)
+    {
         $this->validate($request, [
             'email'   => 'required|email',
             'password' => 'required|min:6'

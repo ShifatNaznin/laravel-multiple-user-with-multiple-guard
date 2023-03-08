@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Affiliate;
 use App\Models\Commission;
 use App\Models\User;
+use App\Models\UserTransection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -31,8 +32,8 @@ class UserController extends Controller
                 'registrationCode' => $request->registrationCode,
                 'password' => Hash::make($request->password),
             ]);
-            flash('Successfully Added')->success();
-            return back();
+            flash('Successfully Registered')->success();
+            return redirect()->intended('user/login');
         } catch (\Throwable $th) {
             flash('Error')->error();
             return back();
@@ -67,6 +68,7 @@ class UserController extends Controller
     {
         $commissionAmount = 0;
         $afterCommisionAmount = 0;
+        $randomNumber = mt_rand(1000, 9999);
         $user = User::where('id', $request->id)->first();
         if (isset($user->registrationCode)) {
             $getAffiliate = Affiliate::where('promoCode', $user->registrationCode)->first();
@@ -78,6 +80,7 @@ class UserController extends Controller
                 if (isset($totalAmount)) {
                     Commission::create([
                         'userId' => $request->id,
+                        'transectionCode' => $randomNumber,
                         'userAmmount' => $request->amount,
                         'affiliateId' =>  $getAffiliate->id,
                         'affiliateType' => $getAffiliate->userType,
@@ -92,6 +95,7 @@ class UserController extends Controller
                 if (isset($totalSubAffAmount)) {
                     Commission::create([
                         'userId' => $request->id,
+                        'transectionCode' => $randomNumber,
                         'userAmmount' => $request->amount,
                         'affiliateId' =>  $getAffiliate->parentId,
                         'affiliateType' => $getParentAffiliateType->userType,
@@ -104,6 +108,7 @@ class UserController extends Controller
                 if (isset($totalAffAmount)) {
                     Commission::create([
                         'userId' => $request->id,
+                        'transectionCode' => $randomNumber,
                         'userAmmount' => $request->amount,
                         'affiliateId' =>  $getAffiliate->id,
                         'affiliateType' => $getAffiliate->userType,
@@ -115,12 +120,36 @@ class UserController extends Controller
                 $afterCommisionAmount = ($request->amount - $commissionAmount);
             }
         }
-        try {
-            User::where('id', $request->id)->update([
+        if ($commissionAmount == 0) {
+            UserTransection::create([
+                'userId' => $request->id,
+                'transectionCode' => $randomNumber,
                 'amount' => $request->amount,
                 'commissionAmount' => $commissionAmount,
+                'commissionRate' => 0,
                 'amountAfterCommission' => $afterCommisionAmount,
                 'details' => $request->details,
+            ]);
+        }else{
+            UserTransection::create([
+                'userId' => $request->id,
+                'transectionCode' => $randomNumber,
+                'amount' => $request->amount,
+                'commissionAmount' => $commissionAmount,
+                'commissionRate' => '30%',
+                'amountAfterCommission' => $afterCommisionAmount,
+                'details' => $request->details,
+            ]);
+        }
+     
+        if ($afterCommisionAmount == 0) {
+            $userTotalAmount = $user->currentAmount +$request->amount;
+        }else{
+            $userTotalAmount=UserTransection::where('userId', $request->id)->sum('amountAfterCommission');
+        }
+        try {
+            User::where('id', $request->id)->update([
+                'currentAmount' => $userTotalAmount,
             ]);
             flash('Successfully Added')->success();
             return back();
@@ -128,5 +157,15 @@ class UserController extends Controller
             flash('Error')->error();
             return back();
         }
+    }
+
+    public function transection(){
+        $id=Auth::user()->id;
+        $user=User::where('id',$id)->first();
+        $data=UserTransection::where('userId',$id)->orderBy('id','DESC')->get();
+        return view('backend.user.transection')->with([
+            'user'=>$user,
+            'data' => $data
+        ]);
     }
 }

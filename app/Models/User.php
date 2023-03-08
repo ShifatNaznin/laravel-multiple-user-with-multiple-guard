@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','userType','dob','registrationCode','amountAfterCommission','commissionAmount'
+        'name', 'email', 'password','userType','dob','registrationCode','currentAmount'
     ];
 
     /**
@@ -39,8 +39,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function user_role()
-    {
-        return $this->belongsTo(UserRole::class, 'userRole');
-    }
 }

@@ -47,6 +47,7 @@ Route::group(['prefix' => 'affiliate'], function () {
     Route::get('/sub-affiliate-register', [AffiliateController::class, 'subAffiliateRegister'])->name('affiliate.subAffiliateRegister'); 
     Route::post('/signup', [AffiliateController::class, 'signup'])->name('affiliate.signup'); 
     Route::post('/affiliatelogin', [AffiliateController::class, 'affiliatelogin'])->name('affiliate.affiliatelogin'); 
+    Route::get('/transection', [AffiliateController::class, 'transection'])->name('affiliate.transection'); 
 });
 //User
 Route::group(['prefix' => 'user'], function () {
@@ -57,4 +58,5 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/information/{id}', [UserController::class, 'information'])->name('user.information'); 
     Route::get('/add-money/{id}', [UserController::class, 'addMoney'])->name('user.addMoney'); 
     Route::post('/store-money', [UserController::class, 'storeMoney'])->name('user.storeMoney'); 
+    Route::get('/transection', [UserController::class, 'transection'])->name('user.transection'); 
 });
