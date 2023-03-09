@@ -23,8 +23,8 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Date</th>
                                 <th>Transection Id</th>
+                                <th>Date</th>
                                 <th>User</th>
                                 <th>User Email</th>
                                 <th>User Amount</th>
@@ -43,9 +43,10 @@
                             @endphp
                             @foreach ($data as $item)
                                 <tr>
-                                    <td>{{ $index }}</td>
-                                    <td>{{date('d-m-Y', strtotime($item->created_at)); }}</td>
+                                    @if ($item->affiliateType == 'affiliate')
+                                    <td>{{$index}}</td>
                                     <td>{{ $item->transectionCode }}</td>
+                                    <td>{{date('d-m-Y', strtotime($item->created_at)); }}</td>
                                     <td>{{ $item->get_user->name }}</td>
                                     <td>{{ $item->get_user->email }}</td>
                                     <td>{{ $item->userAmmount }}</td>
@@ -57,25 +58,20 @@
                                     <td>{{ $subAffitem->commissionPercent }}</td>
                                     <td>{{ $subAffitem->commissionAmount }}</td>
                                     @endforeach
+                                    @php
+                                    $index++;
+                                    @endphp
+                                    @endif
 
                                     @php
                                          $total+=$item->commissionAmount;
                                     @endphp
                                     
                                 </tr>
-                                @php
-                                    $index++;
-                                @endphp
                                 
                             @endforeach
 
                         </tbody>
-                        {{-- <tfoot>
-                            <tr>
-                                <th colspan="5" class="text-center">Total Amount</th>
-                                <th>{{$total}}</th>
-                            </tr>
-                        </tfoot> --}}
 
 
                     </table>
