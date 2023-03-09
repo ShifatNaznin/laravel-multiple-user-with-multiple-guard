@@ -32,6 +32,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Date</th>
+                                <th>Transection Id</th>
                                 <th>User</th>
                                 <th>User Email</th>
                                 <th>User Amount</th>
@@ -48,6 +49,7 @@
                                 <tr>
                                     <td>{{ $index }}</td>
                                     <td>{{date('d-m-Y', strtotime($item->created_at)); }}</td>
+                                    <td>{{ $item->transectionCode }}</td>
                                     <td>{{ $item->get_user->name }}</td>
                                     <td>{{ $item->get_user->email }}</td>
                                     <td>{{ $item->userAmmount }}</td>
@@ -67,7 +69,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="6" class="text-center">Total Amount</th>
+                                <th colspan="7" class="text-center">Total Amount</th>
                                 <th>{{$total}}</th>
                             </tr>
                         </tfoot>

@@ -34,6 +34,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Date</th>
+                                <th>Transection Id</th>
                                 <th>Amount</th>
                                 <th>Commission Amount</th>
                                 <th>Commission Rate</th>
@@ -49,6 +50,7 @@
                                 <tr>
                                     <td>{{ $index }}</td>
                                     <td>{{date('d-m-Y', strtotime($item->created_at)); }}</td>
+                                    <td>{{ $item->transectionCode }}</td>
                                     <td>{{ $item->amount }}</td>
                                     <td>{{ $item->commissionAmount }}</td>
                                     <td>{{ $item->commissionRate }}</td>
