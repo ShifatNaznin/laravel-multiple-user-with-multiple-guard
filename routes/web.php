@@ -39,6 +39,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/register', [AdminController::class, 'register'])->name('admin.register'); 
     Route::post('/signup', [AdminController::class, 'signup'])->name('admin.signup'); 
     Route::post('/adminlogin', [AdminController::class, 'adminlogin'])->name('admin.adminlogin'); 
+    Route::get('/get/transection', [AdminController::class, 'transection'])->name('admin.transection'); 
+    Route::get('/affiliate/list', [AdminController::class, 'affiliateList'])->name('admin.affiliateList'); 
 });
 //Affiliate
 Route::group(['prefix' => 'affiliate'], function () {
@@ -47,7 +49,9 @@ Route::group(['prefix' => 'affiliate'], function () {
     Route::get('/sub-affiliate-register', [AffiliateController::class, 'subAffiliateRegister'])->name('affiliate.subAffiliateRegister'); 
     Route::post('/signup', [AffiliateController::class, 'signup'])->name('affiliate.signup'); 
     Route::post('/affiliatelogin', [AffiliateController::class, 'affiliatelogin'])->name('affiliate.affiliatelogin'); 
-    Route::get('/transection', [AffiliateController::class, 'transection'])->name('affiliate.transection'); 
+    Route::get('/commission', [AffiliateController::class, 'commission'])->name('affiliate.commission'); 
+    Route::get('/sub/affiliate/list', [AffiliateController::class, 'subAffiliateList'])->name('affiliate.subAffiliateList'); 
+    Route::get('/information/{id}', [AffiliateController::class, 'information'])->name('affiliate.information'); 
 });
 //User
 Route::group(['prefix' => 'user'], function () {

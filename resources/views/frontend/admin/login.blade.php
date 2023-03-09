@@ -6,6 +6,7 @@
             <i class="typcn typcn-arrow-back-outline mr-2"></i>Back</a>
     </div>
     <div class="form-container form-container-2 my-4">
+        @include('flash::message')
         <div class="panel bg-light">
 
             <div class="panel-header text-center mb-3">

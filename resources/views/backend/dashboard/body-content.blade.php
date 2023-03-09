@@ -1,6 +1,5 @@
 @extends('backend.admin')
 @section('content')
-{{URL::to('/')}}
     {{-- @php
         $totalIncome = 0;
         $totalExpense = 0;

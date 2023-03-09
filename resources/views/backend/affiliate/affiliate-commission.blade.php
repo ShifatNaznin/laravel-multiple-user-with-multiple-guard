@@ -6,13 +6,11 @@
             <div class="media">
 
                 <div class="media-body">
-                    <h1 class="font-weight-bold">List of User Transection</h1>
+                    <h1 class="font-weight-bold">Affiliate Commission</h1>
                 </div>
             </div>
         </div>
         <div class="col-sm-4 text-right p-0">
-            {{-- <a href="{{ route('createAsset') }}" class="btn btn-success mb-2 mr-1">
-            <i class="typcn typcn-plus mr-2"></i>Add Asset</a> --}}
         </div>
     </div>
 
@@ -34,26 +32,41 @@
                             <tr>
                                 <th>#</th>
                                 <th>Date</th>
-                                <th>Amount</th>
+                                <th>Transection Id</th>
+                                <th>User</th>
+                                <th>User Email</th>
+                                <th>User Amount</th>
+                                <th>Commission Percent</th>
                                 <th>Commission Amount</th>
-                                <th>Commission Rate</th>
-                                <th>Amount After Commission</th>
-                                <th>Details</th>
+                                <th>Child Sub Affiliate</th>
+                                <th>Child Sub Affiliate Commission Percent</th>
+                                <th>Child Sub Affiliate Commission Amount</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
                                 $index = 1;
+                                $total=0;
                             @endphp
                             @foreach ($data as $item)
                                 <tr>
                                     <td>{{ $index }}</td>
                                     <td>{{date('d-m-Y', strtotime($item->created_at)); }}</td>
-                                    <td>{{ $item->amount }}</td>
+                                    <td>{{ $item->transectionCode }}</td>
+                                    <td>{{ $item->get_user->name }}</td>
+                                    <td>{{ $item->get_user->email }}</td>
+                                    <td>{{ $item->userAmmount }}</td>
+                                    <td>{{ $item->commissionPercent }}</td>
                                     <td>{{ $item->commissionAmount }}</td>
-                                    <td>{{ $item->commissionRate }}</td>
-                                    <td>{{ $item->amountAfterCommission }}</td>
-                                    <td>{{ $item->details }}</td>
+                                    @foreach (collect($subAffData)->where('transectionCode',$item->transectionCode)->where('affiliateType','!=',$item->affiliateType) as $subAffitem)
+                                    <td>{{ $subAffitem->get_affiliate->email }}</td>
+                                    <td>{{ $subAffitem->commissionPercent }}</td>
+                                    <td>{{ $subAffitem->commissionAmount }}</td>
+                                    @endforeach
+
+                                    @php
+                                         $total+=$item->commissionAmount;
+                                    @endphp
                                     
                                 </tr>
                                 @php
@@ -63,6 +76,12 @@
                             @endforeach
 
                         </tbody>
+                        {{-- <tfoot>
+                            <tr>
+                                <th colspan="5" class="text-center">Total Amount</th>
+                                <th>{{$total}}</th>
+                            </tr>
+                        </tfoot> --}}
 
 
                     </table>

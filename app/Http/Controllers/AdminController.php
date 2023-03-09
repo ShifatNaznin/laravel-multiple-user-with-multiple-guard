@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Affiliate;
+use App\Models\Commission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -41,7 +43,23 @@ class AdminController extends Controller
         ]);
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
             return redirect()->intended('home');
+        } else {
+            flash('These credentials do not match our records')->error();
+            return back();
         }
-        return back()->withInput($request->only('email', 'remember'));
+    }
+    public function transection()
+    {
+        $data = Commission::orderBy('id', 'DESC')->get();
+        return view('backend.admin.transection')->with([
+            'data' => $data,
+        ]);
+    }
+    public function affiliateList()
+    {
+        $data = Affiliate::where('userType','affiliate')->orderBy('id', 'DESC')->get();
+        return view('backend.admin.affiliate-list')->with([
+            'data' => $data,
+        ]);
     }
 }

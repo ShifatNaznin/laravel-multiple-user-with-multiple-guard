@@ -38,9 +38,17 @@
                         <i class="typcn typcn-home-outline mr-2"></i>Dashboard</a></li>
                 <li class="nav-label nav-label-2">Affiliate</li>
                 @if (Auth::guard('admin')->check())
+                    <li class="{{ Route::is('admin.affiliateList') ? 'mm-active' : '' }}">
+                        <a href="{{ route('admin.affiliateList') }}"><i
+                                class="typcn typcn-tabs-outline mr-2"></i>Affiliate User List</a>
+                    </li>
                     <li class="{{ Route::is('affiliate.register') ? 'mm-active' : '' }}">
-                        <a href="{{ route('affiliate.register') }}"><i class="typcn typcn-home-outline mr-2"></i>Add
+                        <a href="{{ route('affiliate.register') }}"><i class="typcn typcn-tabs-outline mr-2"></i>Add
                             Affiliate User</a>
+                    </li>
+                    <li class="{{ Route::is('admin.transection') ? 'mm-active' : '' }}">
+                        <a href="{{ route('admin.transection') }}"><i class="typcn typcn-tabs-outline mr-2"></i>User
+                            Transection</a>
                     </li>
                 @endif
                 @if (Auth::guard('affiliate')->check())
@@ -48,27 +56,39 @@
                         $userdata = Auth::guard('affiliate')->user();
                         
                     @endphp
+                    <li class="{{ Route::is('affiliate.information') ? 'mm-active' : '' }}">
+                        <a href="{{ route('affiliate.information', $userdata->id) }}"><i
+                                class="typcn typcn-tabs-outline mr-2"></i>Account Information</a>
+                    </li>
                     @if ($userdata->userType == 'affiliate')
+                        <li class="{{ Route::is('affiliate.subAffiliateList') ? 'mm-active' : '' }}">
+                            <a href="{{ route('affiliate.subAffiliateList') }}"><i
+                                    class="typcn typcn-tabs-outline mr-2"></i>Sub Affiliate User List</a>
+                        </li>
                         <li class="{{ Route::is('affiliate.subAffiliateRegister') ? 'mm-active' : '' }}">
                             <a href="{{ route('affiliate.subAffiliateRegister') }}"><i
-                                    class="typcn typcn-home-outline mr-2"></i>Add Sub Affiliate User</a>
+                                    class="typcn typcn-tabs-outline mr-2"></i>Add Sub Affiliate User</a>
                         </li>
                     @endif
-                    <li class="{{ Route::is('affiliate.transection') ? 'mm-active' : '' }}">
-                        <a href="{{ route('affiliate.transection') }}"><i class="typcn typcn-user-outline mr-2"></i>Affiliate Transection</a>
+                    <li class="{{ Route::is('affiliate.commission') ? 'mm-active' : '' }}">
+                        <a href="{{ route('affiliate.commission') }}"><i
+                                class="typcn typcn-tabs-outline mr-2"></i>Commission</a>
                     </li>
                 @endif
                 @if (Auth::guard('web')->check())
-                <li class="{{ Route::is('user.information') ? 'mm-active' : '' }}">
-                    <a href="{{ route('user.information',$userdata->id) }}"><i class="typcn typcn-user-outline mr-2"></i>User Information</a>
-                </li>
-                <li class="{{ Route::is('user.addMoney') ? 'mm-active' : '' }}">
-                    <a href="{{ route('user.addMoney',$userdata->id) }}"><i class="typcn typcn-user-outline mr-2"></i>Add Money</a>
-                </li>
-                <li class="{{ Route::is('user.transection') ? 'mm-active' : '' }}">
-                    <a href="{{ route('user.transection') }}"><i class="typcn typcn-user-outline mr-2"></i>User Transection</a>
-                </li>
-            @endif
+                    <li class="{{ Route::is('user.information') ? 'mm-active' : '' }}">
+                        <a href="{{ route('user.information', $userdata->id) }}"><i
+                                class="typcn typcn-tabs-outline mr-2"></i>User Information</a>
+                    </li>
+                    <li class="{{ Route::is('user.addMoney') ? 'mm-active' : '' }}">
+                        <a href="{{ route('user.addMoney', $userdata->id) }}"><i
+                                class="typcn typcn-tabs-outline mr-2"></i>Add Money</a>
+                    </li>
+                    <li class="{{ Route::is('user.transection') ? 'mm-active' : '' }}">
+                        <a href="{{ route('user.transection') }}"><i class="typcn typcn-tabs-outline mr-2"></i>User
+                            Transection</a>
+                    </li>
+                @endif
             </ul>
         </nav>
     </div>

@@ -16,6 +16,7 @@ class CreateCommissionsTable extends Migration
         Schema::create('commissions', function (Blueprint $table) {
             $table->id();
             $table->integer('userId')->nullable();
+            $table->integer('transectionCode')->nullable();
             $table->integer('userAmmount')->nullable();
             $table->integer('affiliateId')->nullable();
             $table->string('affiliateType')->nullable();

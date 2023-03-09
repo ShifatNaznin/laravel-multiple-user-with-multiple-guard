@@ -19,7 +19,7 @@ class CreateUserTransectionsTable extends Migration
             $table->integer('transectionCode')->unique()->nullable();
             $table->integer('amount')->nullable();
             $table->integer('commissionAmount')->nullable();
-            $table->integer('commissionRate')->nullable();
+            $table->string('commissionRate')->nullable();
             $table->integer('amountAfterCommission')->nullable();
             $table->text('details')->nullable();
             $table->timestamps();
